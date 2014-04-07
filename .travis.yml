@@ -3,7 +3,8 @@ python:
   - "2.6"
   - "2.7"
 # command to install dependencies
-install: "pip install -r testproject/requirements.txt"
-install: "pip install ."
+install: 
+  - "pip install -r testproject/requirements.txt"
+  - "pip install ."
 # command to run tests
 script: "cd testproject;python manage.py test nogroth"
