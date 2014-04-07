@@ -1,7 +1,5 @@
-satchmo-nogroth
+satchmo-nogroth [![Build Status](https://travis-ci.org/kcharvey/satchmo-nogroth.svg?branch=master)](https://travis-ci.org/kcharvey/satchmo-nogroth)
 ===============
-
-[![Build Status](https://travis-ci.org/kcharvey/satchmo-nogroth.svg?branch=master)](https://travis-ci.org/kcharvey/satchmo-nogroth)
 
 NoGroTH = No Ground To Hawaii - A tiered weight shipping module that is Administrative Area (i.e. state/province) aware
 

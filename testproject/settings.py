@@ -147,6 +147,7 @@ INSTALLED_APPS = (
     #'debug_toolbar',
     'app_plugins',
     'testproject.localsite',
+    'nogroth',
 )
 
 AUTHENTICATION_BACKENDS = (
