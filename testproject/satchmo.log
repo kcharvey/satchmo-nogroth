@@ -1,0 +1,5 @@
+Mon, 07 Apr 2014 08:49:18 root         INFO     Satchmo Started
+Mon, 07 Apr 2014 08:49:18 root         INFO     Satchmo Started
+Mon, 07 Apr 2014 05:49:19 configuration DEBUG    Could not load default shipping module configuration: fedex_web_services
+Mon, 07 Apr 2014 05:49:19 shop.listeners DEBUG    Added default shop listeners
+Mon, 07 Apr 2014 05:49:19 satchmo_toolbar DEBUG    Satchmo toolbar ready
