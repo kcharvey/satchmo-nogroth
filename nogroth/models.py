@@ -7,7 +7,7 @@ from datetime import date
 from django.db import models
 from django.conf import settings
 from django.utils.translation import get_language, ugettext_lazy as _
-from l10n.models import Country
+from l10n.models import Country, AdminArea
 from shipping.modules.base import BaseShipper
 
 try:
@@ -49,7 +49,7 @@ class Shipper(BaseShipper):
             try:
                 self._weight = _get_cart_weight(cart)
                 self._cost = self._zone.cost(self._weight)
-            except TieredWeightException:
+            except NoGroTHException:
                 pass
 
         super(Shipper, self).calculate(cart, contact)
@@ -100,6 +100,10 @@ class Shipper(BaseShipper):
         to default zone if set
         """
         assert(self._calculated)
+        
+        import pdb
+        pdb.set_trace()
+        
         # I think its reasonable to assume this shipping method should
         # not be used on an order that doesn't weigh anything.
         if not self._weight or self._weight == Decimal('0.0'):
@@ -142,7 +146,7 @@ class Zone(models.Model):
     countries = models.ManyToManyField(Country, verbose_name=_('countries'), blank=True, related_name="zone_countries")
     handling = models.DecimalField(_('handling'), max_digits=10, decimal_places=2,
         null=True, blank=True)
-
+    excluded_admin_areas = models.ManyToManyField(AdminArea, verbose_name=_('admin areas'), blank=True, related_name="zone_excluded_admin_areas", help_text='Administrative Areas that should be excluded from this zone')
 
     def __unicode__(self):
         return u'%s' % self.name

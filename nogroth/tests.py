@@ -1,6 +1,9 @@
 from datetime import datetime
 from django.test import TestCase
-from l10n.models import Country
+from l10n.models import Country, AdminArea
+from satchmo_store.contact.models import Contact, AddressBook
+from satchmo_store.shop.models import Order, OrderItem
+from product.models import Product
 from nogroth.models import Carrier, NoGroTHException
 
 try:
@@ -126,3 +129,110 @@ class NoGroTHCountryTest(TestCase):
     def testCountry(self):
         zone = self.carrier.get_zone(self.country2)
         self.assertEqual(zone, self.zone2)
+
+
+class NoGroTHAdminAreaTest(TestCase):
+    def setUp(self):
+        self.country1 = Country.objects.create(
+            iso2_code='mc',
+            name='MYCOUNTRY',
+            printable_name='MyCountry',
+            iso3_code='mgc',
+            continent='NA'
+        )
+        self.adminArea1 = AdminArea.objects.create(
+            country = self.country1,
+            name = 'Mainland state',
+            abbrev = 'MS',
+            active = True
+        )
+        self.adminArea2 = AdminArea.objects.create(
+            country = self.country1,
+            name = 'Island state',
+            abbrev = 'IS',
+            active = True
+        )
+        self.carrier1 = Carrier.objects.create(name='Ground', active=True)
+        self.carrier2 = Carrier.objects.create(name='Air', active=True)
+        self.zone1 = self.carrier1.zones.create(name='zone 1')
+        self.zone2 = self.carrier2.zones.create(name='zone 2')
+
+        self.zone1.countries.add(self.country1)
+        self.zone2.countries.add(self.country1)
+        self.zone2.excluded_admin_areas.add(self.adminArea2)
+
+        self.contact1 = Contact.objects.create(
+            title="Mr.",
+            first_name="James",
+            last_name="Polk"
+        )
+        self.contact2 = Contact.objects.create(
+            title="Sen.",
+            first_name="Bob",
+            last_name="Dole"
+        )
+
+        self.addressBook1 = AddressBook.objects.create(
+            contact=self.contact1,
+            addressee="James K. Polk",
+            street1="200 Broadway",
+            state="TN",
+            city="Nashville",
+            postal_code="37210",
+            country=self.country1,
+            is_default_shipping=True,
+            is_default_billing=True
+        )
+        self.addressBook2 = AddressBook.objects.create(
+            contact=self.contact2,
+            addressee="Bob Dole",
+            street1="300 Pineapple Way",
+            state="HI",
+            city="Honolulu",
+            postal_code="99823",
+            country=self.country1,
+            is_default_shipping=True,
+            is_default_billing=True
+        )
+
+        self.product = Product.objects.create(
+            site_id=1,
+            name="Power Suit",
+            active=True,
+            shipclass="YES"
+        )
+
+        self.order1 = Order.objects.create(
+            contact=self.contact1, 
+            ship_state="MS",
+            site_id=1
+        )
+        self.order2 = Order.objects.create(
+            contact=self.contact2, 
+            ship_state="IS",
+            site_id=1
+        )
+
+        self.orderitem1 = OrderItem.objects.create(
+            order=self.order1,
+            product=self.product,
+            quantity=1,
+            unit_price=10,
+            line_item_price=10
+        )
+        self.orderitem2 = OrderItem.objects.create(
+            order=self.order2,
+            product=self.product,
+            quantity=1,
+            unit_price=10,
+            line_item_price=10
+        )
+
+    def testIncludedState(self):
+        import pdb
+        pdb.set_trace()
+        self.fail()
+
+    def testExcludedState(self):
+        self.fail()
+

@@ -166,9 +166,21 @@ SATCHMO_SETTINGS = {
     'MULTISHOP' : False,
     'DOCUMENT_CONVERTER': 'shipping.views.HTMLDocument',
     #'SHOP_URLS' : patterns('satchmo_store.shop.views',)
+    'CUSTOM_SHIPPING_MODULES': ['nogroth'],
 }
 
 SKIP_SOUTH_TESTS=True
 
 # Load the local settings
 from local_settings import *
+
+LIVESETTINGS_OPTIONS = {
+	1: {   
+		'DB': False,
+        'SETTINGS': {   
+			'SHIPPING': {
+				'MODULES': '["nogroth"]'
+			},
+		}
+	}
+}
