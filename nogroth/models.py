@@ -1,5 +1,5 @@
 """
-TieredWeight shipping models
+NoGroTH shipping models
 """
 import logging
 
@@ -16,10 +16,10 @@ except:
     from django.utils._decimal import Decimal
 
 
-log = logging.getLogger('shipping.TieredWeight')
+log = logging.getLogger('nogroth')
 
 
-class TieredWeightException(Exception):
+class NoGroTHException(Exception):
     pass
 
 
@@ -33,7 +33,7 @@ def _get_cart_weight(cart):
 
 class Shipper(BaseShipper):
     def __init__(self, carrier):
-        self.id = 'tieredweight_%i' % carrier.pk
+        self.id = 'nogroth_%i' % carrier.pk
         self._carrier = carrier
         super(BaseShipper, self).__init__()
 
@@ -59,7 +59,7 @@ class Shipper(BaseShipper):
         """
         This is mainly helpful for debugging purposes
         """
-        return "TieredWeight_Shipper: %s" % self.id
+        return "NoGroTH_Shipper: %s" % self.id
 
 
     def cost(self):
@@ -103,7 +103,7 @@ class Shipper(BaseShipper):
         # I think its reasonable to assume this shipping method should
         # not be used on an order that doesn't weigh anything.
         if not self._weight or self._weight == Decimal('0.0'):
-            log.debug("Tiered weight not valid for weight = %s" % (self._weight))
+            log.debug("NoGroTH tiered weight not valid for weight = %s" % (self._weight))
             return False
 
         if self._zone is not None and self._cost is not None:
@@ -139,7 +139,7 @@ class Carrier(models.Model):
 class Zone(models.Model):
     carrier = models.ForeignKey(Carrier, verbose_name=_('carrier'), related_name='zones')
     name = models.CharField(_('name'), max_length=50)
-    countries = models.ManyToManyField(Country, verbose_name=_('countries'), blank=True)
+    countries = models.ManyToManyField(Country, verbose_name=_('countries'), blank=True, related_name="zone_countries")
     handling = models.DecimalField(_('handling'), max_digits=10, decimal_places=2,
         null=True, blank=True)
 
@@ -236,7 +236,7 @@ class Zone(models.Model):
             return tiers[0].cost
         else:
             log.debug("No tiered price found for %s: weight=%s", self, weight)
-            raise TieredWeightException
+            raise NoGroTHException
 
 
 class ZoneTranslation(models.Model):

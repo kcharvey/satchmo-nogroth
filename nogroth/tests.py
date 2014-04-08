@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.test import TestCase
 from l10n.models import Country
-from shipping.modules.tieredweight.models import Carrier, TieredWeightException
+from nogroth.models import Carrier, NoGroTHException
 
 try:
     from decimal import Decimal
@@ -19,7 +19,7 @@ def make_tiers(zone, prices, expires=None):
         )
 
 
-class TieredWeightTest(TestCase):
+class NoGroTHTest(TestCase):
     def setUp(self):
         self.carrier = Carrier.objects.create(name='pricing', active=True)
         self.zone = self.carrier.zones.create(name='zone 1')
@@ -32,7 +32,7 @@ class TieredWeightTest(TestCase):
 
     def testBase(self):
         self.assertEqual(self.zone.cost(1), Decimal('11.00'))
-        self.assertRaises(TieredWeightException, self.zone.cost, 4)
+        self.assertRaises(NoGroTHException, self.zone.cost, 4)
 
         
     def testTwoPrices(self):
@@ -44,10 +44,10 @@ class TieredWeightTest(TestCase):
         self.assertEqual(self.zone.cost(1), Decimal('11.00'))
         self.assertEqual(self.zone.cost(9), Decimal('12.00'))
         self.assertEqual(self.zone.cost(10), Decimal('12.00'))
-        self.assertRaises(TieredWeightException, self.zone.cost, 100)
+        self.assertRaises(NoGroTHException, self.zone.cost, 100)
 
 
-class TieredWeightExpiringTest(TestCase):
+class NoGroTHExpiringTest(TestCase):
     def setUp(self):
         self.carrier = Carrier.objects.create(name='pricing', active=True)
         self.zone = self.carrier.zones.create(name='zone 1')
@@ -94,7 +94,7 @@ class TieredWeightExpiringTest(TestCase):
         self.assertEqual(self.zone.cost(40), Decimal('5.00'))
 
 
-class TieredWeightCountryTest(TestCase):
+class NoGroTHCountryTest(TestCase):
     def setUp(self):
         self.country1 = Country.objects.create(
             iso2_code='mc',
