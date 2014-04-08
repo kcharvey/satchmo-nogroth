@@ -1,6 +1,6 @@
 from django import forms
 from django.db.models.query import EmptyQuerySet 
-from shipping.modules.tieredweight.models import Carrier, Zone
+from nogroth.models import Carrier, Zone
 
 
 class CarrierAdminForm(forms.ModelForm):
