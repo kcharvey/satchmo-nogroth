@@ -31,4 +31,4 @@ setup(
         ],
     license = "BSD",
     long_description = "".join( open('README.md').readlines() )
-    )
+)

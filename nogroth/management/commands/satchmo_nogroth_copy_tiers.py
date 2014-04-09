@@ -28,5 +28,5 @@ class Command(BaseCommand):
         for wt in weight_tiers.values():
             WeightTier.objects.create(**wt)
 
-        self.stdout.write('Converted %(car)s carriers, %(zo)s zones, %(zotr)s zone translations, and %(wt)s weight tiers to NoGroTH' % counts)
+        self.stdout.write('Converted %(car)s carriers, %(zo)s zones, %(zotr)s zone translations, and %(wt)s weight tiers to NoGroTH\n' % counts)
         
