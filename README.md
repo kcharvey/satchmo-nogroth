@@ -28,7 +28,9 @@ Installation
  
         python manage.py migrate nogroth
 
- 5. If necessary, copy over existing Tiered Weight Shipping rules to NoGroTH. Make sure `shipping.modules.tieredweight` is in your installed apps and run
+ 5. Activate 'NoGroTH' as a shipping module in `livesettings`
+ 
+ 6. If necessary, copy over existing Tiered Weight Shipping rules to NoGroTH. Make sure `shipping.modules.tieredweight` is in your installed apps and run
 
         python manage.py satchmo_nogroth_copy_rules
 
