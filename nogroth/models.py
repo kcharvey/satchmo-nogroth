@@ -101,9 +101,6 @@ class Shipper(BaseShipper):
         """
         assert(self._calculated)
         
-        import pdb
-        pdb.set_trace()
-        
         # I think its reasonable to assume this shipping method should
         # not be used on an order that doesn't weigh anything.
         if not self._weight or self._weight == Decimal('0.0'):

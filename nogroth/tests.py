@@ -2,9 +2,10 @@ from datetime import datetime
 from django.test import TestCase
 from l10n.models import Country, AdminArea
 from satchmo_store.contact.models import Contact, AddressBook
-from satchmo_store.shop.models import Order, OrderItem
+from satchmo_store.shop.models import Cart 
 from product.models import Product
-from nogroth.models import Carrier, NoGroTHException
+from shipping.config import shipping_methods
+from nogroth.models import Carrier, WeightTier, NoGroTHException
 
 try:
     from decimal import Decimal
@@ -161,6 +162,17 @@ class NoGroTHAdminAreaTest(TestCase):
         self.zone2.countries.add(self.country1)
         self.zone2.excluded_admin_areas.add(self.adminArea2)
 
+        self.tier1 = WeightTier.objects.create(
+            zone=self.zone1,
+            min_weight=1.00,
+            price=5.00
+        )
+        self.tier2 = WeightTier.objects.create(
+            zone=self.zone2,
+            min_weight=1.00,
+            price=10.00
+        )
+
         self.contact1 = Contact.objects.create(
             title="Mr.",
             first_name="James",
@@ -199,40 +211,44 @@ class NoGroTHAdminAreaTest(TestCase):
             site_id=1,
             name="Power Suit",
             active=True,
-            shipclass="YES"
+            shipclass="YES",
+            weight=1.0
         )
 
-        self.order1 = Order.objects.create(
-            contact=self.contact1, 
-            ship_state="MS",
+        self.cart1 = Cart.objects.create(
+            customer=self.contact1, 
             site_id=1
         )
-        self.order2 = Order.objects.create(
-            contact=self.contact2, 
-            ship_state="IS",
-            site_id=1
-        )
+        self.cart1.add_item(self.product, 1)
 
-        self.orderitem1 = OrderItem.objects.create(
-            order=self.order1,
-            product=self.product,
-            quantity=1,
-            unit_price=10,
-            line_item_price=10
+        self.cart2 = Cart.objects.create(
+            customer=self.contact2, 
+            site_id=1
         )
-        self.orderitem2 = OrderItem.objects.create(
-            order=self.order2,
-            product=self.product,
-            quantity=1,
-            unit_price=10,
-            line_item_price=10
-        )
+        self.cart2.add_item(self.product, 1)
+        
 
     def testIncludedState(self):
-        import pdb
-        pdb.set_trace()
-        self.fail()
+        """
+        Test that the non-excluded state can use both shippers
+        """
+        shippers = shipping_methods()
+        
+        shippers[0].calculate(self.cart1, self.contact1)
+        self.assertTrue(shippers[0].valid(self.cart1))
+
+        shippers[1].calculate(self.cart1, self.contact1)
+        self.assertTrue(shippers[1].valid(self.cart1))
 
     def testExcludedState(self):
-        self.fail()
+        """
+        Test that the excluded stat is not valid for the second shipper
+        """
+        shippers = shipping_methods()
+        
+        shippers[0].calculate(self.cart2, self.contact2)
+        self.assertTrue(shippers[0].valid(self.cart2))
+
+        shippers[1].calculate(self.cart2, self.contact2)
+        self.assertFalse(shippers[1].valid(self.cart2))
 
