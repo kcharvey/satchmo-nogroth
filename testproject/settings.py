@@ -146,6 +146,7 @@ INSTALLED_APPS = (
     #'satchmo_ext.tieredpricing',
     #'debug_toolbar',
     'app_plugins',
+    'south',
     'testproject.localsite',
     'nogroth',
 )
