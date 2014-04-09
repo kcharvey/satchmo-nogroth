@@ -32,7 +32,7 @@ Installation
  
  6. If necessary, copy over existing Tiered Weight Shipping rules to NoGroTH. Make sure `shipping.modules.tieredweight` is in your installed apps and run
 
-        python manage.py satchmo_nogroth_copy_rules
+        python manage.py satchmo_nogroth_copy_tiers
 
   You can remove `shipping.modules.tieredweight` from your settings file after this command successfully runs.
 

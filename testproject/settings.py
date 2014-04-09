@@ -142,7 +142,7 @@ INSTALLED_APPS = (
     #'satchmo_ext.productratings',
     'satchmo_ext.satchmo_toolbar',
     'satchmo_utils',
-    #'shipping.modules.tieredquantity',
+    'shipping.modules.tieredweight',
     #'satchmo_ext.tieredpricing',
     #'debug_toolbar',
     'app_plugins',

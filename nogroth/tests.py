@@ -5,7 +5,7 @@ from satchmo_store.contact.models import Contact, AddressBook
 from satchmo_store.shop.models import Cart, Order, OrderItem
 from product.models import Product
 from shipping.config import shipping_methods
-from nogroth.models import Carrier, WeightTier, NoGroTHException
+from nogroth.models import Carrier, WeightTier, Zone, ZoneTranslation, NoGroTHException
 
 try:
     from decimal import Decimal
@@ -252,3 +252,70 @@ class NoGroTHAdminAreaTest(TestCase):
         shippers[1].calculate(self.cart2, self.contact2)
         self.assertFalse(shippers[1].valid())
 
+
+class NoGroTHCommandTest(TestCase):
+    def setUp(self):
+        from shipping.modules.tieredweight.models import Carrier as TWCarrier
+        from shipping.modules.tieredweight.models import ZoneTranslation as TWZoneTranslation
+        from shipping.modules.tieredweight.models import WeightTier as TWWeightTier
+
+        self.country1 = Country.objects.create(
+            iso2_code='mc',
+            name='MYCOUNTRY',
+            printable_name='MyCountry',
+            iso3_code='mgc',
+            continent='NA'
+        )
+        self.carrier1 = TWCarrier.objects.create(name='Ground', active=True)
+        self.carrier2 = TWCarrier.objects.create(name='Air', active=True)
+        self.zone1 = self.carrier1.zones.create(name='zone 1')
+        self.zone2 = self.carrier2.zones.create(name='zone 2')
+
+        self.zone1.countries.add(self.country1)
+        self.zone2.countries.add(self.country1)
+
+        self.zoneTrans = TWZoneTranslation.objects.create(
+            zone=self.zone1,
+            lang_code="ES",
+            description="Por Aire",
+            method="Aire",
+            delivery="5 dias"
+        )
+
+        self.tier1 = TWWeightTier.objects.create(
+            zone=self.zone1,
+            min_weight='1.00',
+            price='5.00'
+        )
+        self.tier2 = TWWeightTier.objects.create(
+            zone=self.zone2,
+            min_weight='1.00',
+            price='10.00'
+        )
+
+    def testManagementCommand(self):
+        """
+        After running satchmo_nogroth_copy_tiers, all of the
+        data from tiered weight shipping should be moved
+        to NoGroTH
+        """
+        # at first there were none
+        self.assertEqual(Carrier.objects.all().count(), 0)
+        self.assertEqual(Zone.objects.all().count(), 0)
+        self.assertEqual(ZoneTranslation.objects.all().count(), 0)
+        self.assertEqual(WeightTier.objects.all().count(), 0)
+
+        # then we run the command
+        from django.core.management import call_command
+        call_command('satchmo_nogroth_copy_tiers')
+
+        # and voila
+        self.assertEqual(Carrier.objects.all().count(), 2)
+        self.assertEqual(Zone.objects.all().count(), 2)
+        self.assertEqual(ZoneTranslation.objects.all().count(), 1)
+        self.assertEqual(WeightTier.objects.all().count(), 1)
+        
+        self.assertEqual(Carrier.objects.filter(name="Air", active=True).count(), 1)
+        self.assertEqual(Zone.objects.filter(name="zone 1").count(), 1)
+        self.assertEqual(ZoneTranslations.objects.filter(zone_id=1).count(), 1)
+        self.assertEqual(WeightTier.objects.filter(zone_id=2).count(), 1)
