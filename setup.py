@@ -6,7 +6,12 @@ from setuptools import setup
 
 setup(
     name = "satchmo-nogroth",
-    packages = ["nogroth", "nogroth.management", "nogroth.management.commands"],
+    packages = [
+        "nogroth", 
+        "nogroth.management", 
+        "nogroth.management.commands",
+        "nogroth.migrations"
+    ],
     version = "0.1.1",
     description = "A tiered weight shipping module for Satchmo that is Administrative Area (i.e. state/province) aware",
     author = "Kevin Harvey",
