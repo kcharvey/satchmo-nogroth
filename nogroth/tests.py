@@ -313,9 +313,9 @@ class NoGroTHCommandTest(TestCase):
         self.assertEqual(Carrier.objects.all().count(), 2)
         self.assertEqual(Zone.objects.all().count(), 2)
         self.assertEqual(ZoneTranslation.objects.all().count(), 1)
-        self.assertEqual(WeightTier.objects.all().count(), 1)
+        self.assertEqual(WeightTier.objects.all().count(), 2)
         
         self.assertEqual(Carrier.objects.filter(name="Air", active=True).count(), 1)
         self.assertEqual(Zone.objects.filter(name="zone 1").count(), 1)
-        self.assertEqual(ZoneTranslations.objects.filter(zone_id=1).count(), 1)
+        self.assertEqual(ZoneTranslation.objects.filter(zone_id=1).count(), 1)
         self.assertEqual(WeightTier.objects.filter(zone_id=2).count(), 1)
