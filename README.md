@@ -39,7 +39,7 @@ Installation
 Dependencies
 ---
 
-Assuming you've got a working Satchmo site, there are no other dependencies besides `satchmo` and it's dependencies.
+Assuming you've got a working Satchmo site, there are no other dependencies besides `satchmo` and its dependencies.
 
 Development
 ---
