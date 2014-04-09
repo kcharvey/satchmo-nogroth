@@ -2,7 +2,7 @@ from datetime import datetime
 from django.test import TestCase
 from l10n.models import Country, AdminArea
 from satchmo_store.contact.models import Contact, AddressBook
-from satchmo_store.shop.models import Cart 
+from satchmo_store.shop.models import Cart, Order, OrderItem
 from product.models import Product
 from shipping.config import shipping_methods
 from nogroth.models import Carrier, WeightTier, NoGroTHException
@@ -143,14 +143,14 @@ class NoGroTHAdminAreaTest(TestCase):
         )
         self.adminArea1 = AdminArea.objects.create(
             country = self.country1,
-            name = 'Mainland state',
-            abbrev = 'MS',
+            name = 'Tennessee',
+            abbrev = 'TN',
             active = True
         )
         self.adminArea2 = AdminArea.objects.create(
             country = self.country1,
-            name = 'Island state',
-            abbrev = 'IS',
+            name = 'Hawaii',
+            abbrev = 'HI',
             active = True
         )
         self.carrier1 = Carrier.objects.create(name='Ground', active=True)
@@ -227,6 +227,29 @@ class NoGroTHAdminAreaTest(TestCase):
         )
         self.cart2.add_item(self.product, 1)
         
+        self.order1 = Order.objects.create(
+            contact=self.contact1, 
+            site_id=1
+        )
+        self.order2 = Order.objects.create(
+            contact=self.contact2, 
+            site_id=1
+        )
+
+        self.orderitem1 = OrderItem.objects.create(
+            order=self.order1,
+            product=self.product,
+            quantity=1,
+            unit_price=10,
+            line_item_price=10
+        )
+        self.orderitem2 = OrderItem.objects.create(
+            order=self.order2,
+            product=self.product,
+            quantity=1,
+            unit_price=10,
+            line_item_price=10
+        )
 
     def testIncludedState(self):
         """
@@ -235,10 +258,10 @@ class NoGroTHAdminAreaTest(TestCase):
         shippers = shipping_methods()
         
         shippers[0].calculate(self.cart1, self.contact1)
-        self.assertTrue(shippers[0].valid(self.cart1))
+        self.assertTrue(shippers[0].valid(self.order1))
 
         shippers[1].calculate(self.cart1, self.contact1)
-        self.assertTrue(shippers[1].valid(self.cart1))
+        self.assertTrue(shippers[1].valid(self.order1))
 
     def testExcludedState(self):
         """
@@ -247,8 +270,8 @@ class NoGroTHAdminAreaTest(TestCase):
         shippers = shipping_methods()
         
         shippers[0].calculate(self.cart2, self.contact2)
-        self.assertTrue(shippers[0].valid(self.cart2))
+        self.assertTrue(shippers[0].valid(self.order2))
 
         shippers[1].calculate(self.cart2, self.contact2)
-        self.assertFalse(shippers[1].valid(self.cart2))
+        self.assertFalse(shippers[1].valid(self.order2))
 
