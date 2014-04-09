@@ -164,13 +164,13 @@ class NoGroTHAdminAreaTest(TestCase):
 
         self.tier1 = WeightTier.objects.create(
             zone=self.zone1,
-            min_weight=1.00,
-            price=5.00
+            min_weight='1.00',
+            price='5.00'
         )
         self.tier2 = WeightTier.objects.create(
             zone=self.zone2,
-            min_weight=1.00,
-            price=10.00
+            min_weight='1.00',
+            price='10.00'
         )
 
         self.contact1 = Contact.objects.create(
@@ -212,7 +212,7 @@ class NoGroTHAdminAreaTest(TestCase):
             name="Power Suit",
             active=True,
             shipclass="YES",
-            weight=1.0
+            weight='1.0'
         )
 
         self.cart1 = Cart.objects.create(
