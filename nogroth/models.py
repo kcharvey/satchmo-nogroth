@@ -101,6 +101,10 @@ class Shipper(BaseShipper):
         """
         assert(self._calculated)
         
+        # Not valid if the shipping address is in an excluded AdminArea
+        if self._zone.excluded_admin_areas.filter(abbrev=order.ship_state).exists():
+            return False
+        
         # I think its reasonable to assume this shipping method should
         # not be used on an order that doesn't weigh anything.
         if not self._weight or self._weight == Decimal('0.0'):
