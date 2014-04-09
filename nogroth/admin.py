@@ -1,6 +1,6 @@
 from django.contrib import admin
-from shipping.modules.tieredweight.models import Carrier, WeightTier, Zone, ZoneTranslation
-from shipping.modules.tieredweight.forms import CarrierAdminForm, ZoneAdminForm
+from nogroth.models import Carrier, WeightTier, Zone, ZoneTranslation
+from nogroth.forms import CarrierAdminForm, ZoneAdminForm
 
 
 class WeightTierInline(admin.TabularInline):
