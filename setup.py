@@ -30,5 +30,5 @@ setup(
         "Topic :: Internet",
         ],
     license = "BSD",
-    long_description = "".join( open('README.md').readlines() )
+    long_description = "See https://github.com/kcharvey/satchmo-nogroth for isntallation instructions."
 )
