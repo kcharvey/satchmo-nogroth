@@ -44,6 +44,7 @@ class Shipper(BaseShipper):
         """
         self._cost, self._weight = None, None
         self._zone = self._carrier.get_zone(contact._shipping_address().country)
+        self._admin_area = contact._shipping_address().state
 
         if self._zone:
             try:
@@ -102,7 +103,7 @@ class Shipper(BaseShipper):
         assert(self._calculated)
         
         # Not valid if the shipping address is in an excluded AdminArea
-        if self._zone.excluded_admin_areas.filter(abbrev=order.ship_state).exists():
+        if self._zone.excluded_admin_areas.filter(abbrev=self._admin_area).exists():
             return False
         
         # I think its reasonable to assume this shipping method should

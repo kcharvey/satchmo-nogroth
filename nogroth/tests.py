@@ -226,30 +226,7 @@ class NoGroTHAdminAreaTest(TestCase):
             site_id=1
         )
         self.cart2.add_item(self.product, 1)
-        
-        self.order1 = Order.objects.create(
-            contact=self.contact1, 
-            site_id=1
-        )
-        self.order2 = Order.objects.create(
-            contact=self.contact2, 
-            site_id=1
-        )
 
-        self.orderitem1 = OrderItem.objects.create(
-            order=self.order1,
-            product=self.product,
-            quantity=1,
-            unit_price=10,
-            line_item_price=10
-        )
-        self.orderitem2 = OrderItem.objects.create(
-            order=self.order2,
-            product=self.product,
-            quantity=1,
-            unit_price=10,
-            line_item_price=10
-        )
 
     def testIncludedState(self):
         """
@@ -258,10 +235,10 @@ class NoGroTHAdminAreaTest(TestCase):
         shippers = shipping_methods()
         
         shippers[0].calculate(self.cart1, self.contact1)
-        self.assertTrue(shippers[0].valid(self.order1))
+        self.assertTrue(shippers[0].valid())
 
         shippers[1].calculate(self.cart1, self.contact1)
-        self.assertTrue(shippers[1].valid(self.order1))
+        self.assertTrue(shippers[1].valid())
 
     def testExcludedState(self):
         """
@@ -270,8 +247,8 @@ class NoGroTHAdminAreaTest(TestCase):
         shippers = shipping_methods()
         
         shippers[0].calculate(self.cart2, self.contact2)
-        self.assertTrue(shippers[0].valid(self.order2))
+        self.assertTrue(shippers[0].valid())
 
         shippers[1].calculate(self.cart2, self.contact2)
-        self.assertFalse(shippers[1].valid(self.order2))
+        self.assertFalse(shippers[1].valid())
 
