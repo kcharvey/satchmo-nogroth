@@ -12,7 +12,7 @@ setup(
         "nogroth.management.commands",
         "nogroth.migrations"
     ],
-    version = "0.1.2",
+    version = "0.1.3",
     description = "A tiered weight shipping module for Satchmo that is Administrative Area (i.e. state/province) aware",
     author = "Kevin Harvey",
     author_email = "kcharvey@gmail.com",
