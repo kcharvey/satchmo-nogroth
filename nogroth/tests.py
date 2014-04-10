@@ -141,6 +141,13 @@ class NoGroTHAdminAreaTest(TestCase):
             iso3_code='mgc',
             continent='NA'
         )
+        self.country2 = Country.objects.create(
+            iso2_code='nm',
+            name='NOTMYCOUNTRY',
+            printable_name='NotMyCountry',
+            iso3_code='nmc',
+            continent='SA'
+        )
         self.adminArea1 = AdminArea.objects.create(
             country = self.country1,
             name = 'Tennessee',
@@ -155,11 +162,14 @@ class NoGroTHAdminAreaTest(TestCase):
         )
         self.carrier1 = Carrier.objects.create(name='Ground', active=True)
         self.carrier2 = Carrier.objects.create(name='Air', active=True)
+        self.carrier3 = Carrier.objects.create(name='International Air', active=True)
         self.zone1 = self.carrier1.zones.create(name='zone 1')
         self.zone2 = self.carrier2.zones.create(name='zone 2')
+        self.zone3 = self.carrier3.zones.create(name='zone 3')
 
         self.zone1.countries.add(self.country1)
         self.zone2.countries.add(self.country1)
+        self.zone3.countries.add(self.country2)
         self.zone2.excluded_admin_areas.add(self.adminArea2)
 
         self.tier1 = WeightTier.objects.create(
@@ -240,6 +250,9 @@ class NoGroTHAdminAreaTest(TestCase):
         shippers[1].calculate(self.cart1, self.contact1)
         self.assertTrue(shippers[1].valid())
 
+        shippers[2].calculate(self.cart1, self.contact1)
+        self.assertTrue(shippers[2].valid())
+
     def testExcludedState(self):
         """
         Test that the excluded stat is not valid for the second shipper
@@ -252,6 +265,8 @@ class NoGroTHAdminAreaTest(TestCase):
         shippers[1].calculate(self.cart2, self.contact2)
         self.assertFalse(shippers[1].valid())
 
+        shippers[2].calculate(self.cart2, self.contact2)
+        self.assertFalse(shippers[2].valid())
 
 class NoGroTHCommandTest(TestCase):
     def setUp(self):
