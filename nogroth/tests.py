@@ -251,7 +251,7 @@ class NoGroTHAdminAreaTest(TestCase):
         self.assertTrue(shippers[1].valid())
 
         shippers[2].calculate(self.cart1, self.contact1)
-        self.assertTrue(shippers[2].valid())
+        self.assertFalse(shippers[2].valid())
 
     def testExcludedState(self):
         """

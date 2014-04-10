@@ -103,7 +103,7 @@ class Shipper(BaseShipper):
         assert(self._calculated)
         
         # Not valid if the shipping address is in an excluded AdminArea
-        if self._zone.excluded_admin_areas.filter(abbrev=self._admin_area).exists():
+        if self._zone and self._zone.excluded_admin_areas.filter(abbrev=self._admin_area).exists():
             return False
         
         # I think its reasonable to assume this shipping method should
